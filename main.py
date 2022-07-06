@@ -163,16 +163,7 @@ if(id == result_id) and (first == result_first) and (last == result_last):
             print("Welcome, " + admin_user.show_first() + " " + admin_user.show_last() + "!")
             action_choice = int(input("Choose an option:\n1. Add course\n2. Remove course\n3. Add user\n4. Remove user\n5. Add student\n6. Remove student\n7. Add instructor\n8. Remove instructor\n0. Exit\n"))
             if(action_choice == 1):
-                crn = "0"
-                title = "0"
-                depart = "0"
-                time = "0"
-                days = "0"
-                semester = "0"
-                year = 0
-                credits = 0
                 print(admin_user.add_course())
-                cursor.execute("""INSERT INTO COURSE VALUES(?, ?, ?, ?, ?, ?, ?, ?);""", (crn, title, depart, time, days, semester, year, credits))
             elif(action_choice == 2):
                 print(admin_user.remove_course())
             elif(action_choice == 3):
