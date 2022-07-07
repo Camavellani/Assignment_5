@@ -22,17 +22,17 @@ class user:
     def show_id(self):
         return self.id
     def search_courses(self):
-        cursor.execute("""SELECT * FROM COURSE""")
-        query_result = cursor.fetchall()
-        print(query_result)
+        sql_command = """SELECT * FROM COURSE"""
+        return(sql_command)
     def search_by_parameters(self):
         print("Enter a value or * to show all.")
-        crn = input("Enter an id:")
-        title = input("Enter title:")
-        depart = input("Enter department:")
-        time = input("Enter what time of day the class is:")
-        days = input("Enter what days the class is:")
-        semester = input("Enter semester of class:")
+        crn = str(input("Enter an id:"))
+        title = str(input("Enter title:"))
+        depart = str(input("Enter department:"))
+        time = str(input("Enter what time of day the class is:"))
+        days = str(input("Enter what days the class is:"))
+        semester = str(input("Enter semester of class:"))
         year = int(input("Enter year of class:"))
-        credits = input("Enter credits of class:")
-        cursor.execute("""SELECT * FROM COURSE WHERE CRN = ? AND TITLE = ? AND DEPARTMENT = ? AND TIME = ? AND DAYS = ? and SEMESTER = ? AND YEAR = ? AND CREDITS = ?""" , [crn, title, depart, time, days, semester, year, credits])
+        credits = int(input("Enter credits of class:"))
+        return(crn, title, depart, time, days, semester, year, credits)
+cursor.close()

@@ -8,7 +8,9 @@ from admin import admin
 
 database = sqlite3.connect("data.db")
 cursor = database.cursor()
+parameters = []
 course_list = []
+roster = []
 
 # Creating tables
 sql_command = """CREATE TABLE IF NOT EXISTS STUDENT (
@@ -79,6 +81,7 @@ if(user_choice == 1):
         result_last = "0"
     else:
         result_last = last
+    
 elif(user_choice == 2):
     # Verify instructor credentials
     cursor.execute("""SELECT ID FROM INSTRUCTOR WHERE ID = ?""", (id,))
@@ -99,6 +102,7 @@ elif(user_choice == 2):
         result_last = "0"
     else:
         result_last = last
+    
 elif(user_choice == 3):
     # Verify admin credentials
     cursor.execute("""SELECT ID FROM ADMIN WHERE ID = ?""", (id,))
@@ -119,6 +123,7 @@ elif(user_choice == 3):
         result_last = "0"
     else:
         result_last = last
+    
 else:
     print("That was not a valid input. Please try again.\n")
 
@@ -131,7 +136,9 @@ if(id == result_id) and (first == result_first) and (last == result_last):
             print("Welcome, " + student_user.show_first() + " " + student_user.show_last() + "!")
             action_choice = int(input("Choose an option:\n1. Search courses\n2. Add courses\n3. Remove courses\n4. Print schedule\n5. Search course by parameter\n0. Exit\n"))
             if(action_choice == 1):
-                print(student_user.search_courses())
+                cursor.execute(student_user.search_courses())
+                query_result = cursor.fetchall()
+                print(query_result)
             elif(action_choice == 2):
                 print(student_user.add_courses(course_list))
             elif(action_choice == 3):
@@ -139,7 +146,10 @@ if(id == result_id) and (first == result_first) and (last == result_last):
             elif(action_choice == 4):
                 print(student_user.print_schedule(course_list))
             elif(action_choice == 5):
-                print(student_user.search_by_parameters())
+                parameters = student_user.search_by_parameters()
+                print(cursor.execute("""SELECT * FROM COURSE WHERE (CRN = ? AND TITLE = ? AND DEPARTMENT = ? AND TIME = ? AND DAYS = ? AND SEMESTER = ? AND YEAR = ? AND CREDITS = ?)""" , (parameters[0], parameters[1], parameters[2], parameters[3], parameters[4], parameters[5], parameters[6], parameters[7])))
+                query_result = cursor.fetchall()
+                print(query_result)
             elif(action_choice == 0):
                 break
         
@@ -147,13 +157,20 @@ if(id == result_id) and (first == result_first) and (last == result_last):
         elif(user_choice == 2):
             instructor_user = instructor(first, last, id)
             print("Welcome, " + instructor_user.show_first() + " " + instructor_user.show_last() + "!")
-            action_choice = int(input("Choose an option:\n1. Print schedule\n2. Print class list\n3. Search courses\n0. Exit\n"))
+            action_choice = int(input("Choose an option:\n1. Assemble roster\n2. Print roster\n3. Search courses\n4. Search courses by parameter\n0. Exit\n"))
             if(action_choice == 1):
-                print(instructor_user.print_schedule())
+                print(instructor_user.assemble(roster))
             elif(action_choice == 2):
-                print(instructor_user.print_class_list())
+                print(instructor_user.print_roster(roster))
             elif(action_choice == 3):
-                print(instructor_user.search_courses())
+                cursor.execute(instructor_user.search_courses())
+                query_result = cursor.fetchall()
+                print(query_result)
+            elif(action_choice == 4):
+                parameters = instructor_user.search_by_parameters()
+                print(cursor.execute("""SELECT * FROM COURSE WHERE (CRN = ? AND TITLE = ? AND DEPARTMENT = ? AND TIME = ? AND DAYS = ? AND SEMESTER = ? AND YEAR = ? AND CREDITS = ?)""" , (parameters[0], parameters[1], parameters[2], parameters[3], parameters[4], parameters[5], parameters[6], parameters[7])))
+                query_result = cursor.fetchall()
+                print(query_result)
             elif(action_choice == 0):
                 break
 
@@ -161,23 +178,40 @@ if(id == result_id) and (first == result_first) and (last == result_last):
         elif(user_choice == 3):
             admin_user = admin(first, last, id)
             print("Welcome, " + admin_user.show_first() + " " + admin_user.show_last() + "!")
-            action_choice = int(input("Choose an option:\n1. Add course\n2. Remove course\n3. Add user\n4. Remove user\n5. Add student\n6. Remove student\n7. Add instructor\n8. Remove instructor\n0. Exit\n"))
+            action_choice = int(input("Choose an option:\n1. Add course\n2. Remove course\n3. Add user\n4. Remove user\n5. Add student\n6. Remove student\n7. Add instructor\n8. Remove instructor\n9. Search courses\n10. Search courses by parameter\n0. Exit\n"))
             if(action_choice == 1):
-                print(admin_user.add_course())
+                parameters = admin_user.add_course()
+                cursor.execute("""INSERT INTO COURSE VALUES(?, ?, ?, ?, ?, ?, ?, ?);""", (parameters[0], parameters[1], parameters[2], parameters[3], parameters[4], parameters[5], parameters[6], parameters[7]))
             elif(action_choice == 2):
-                print(admin_user.remove_course())
+                crn = admin_user.remove_course()
+                cursor.execute("""DELETE FROM COURSE WHERE CRN = ?;""", (crn,))
             elif(action_choice == 3):
-                print(admin_user.add_user())
+                parameters = admin_user.add_user()
+                cursor.execute("""INSERT INTO ADMIN VALUES(?, ?, ?, ?, ?, ?);""", (parameters[0], parameters[1], parameters[2], parameters[3], parameters[4], parameters[5]))
             elif(action_choice == 4):
-                print(admin_user.remove_user())
+                id = admin_user.remove_user()
+                cursor.execute("""DELETE FROM ADMIN WHERE ID = ?;""", (id,))
             elif(action_choice == 5):
-                print(admin_user.add_student())
+                parameters = admin_user.add_student()
+                cursor.execute("""INSERT INTO STUDENT VALUES(?, ?, ?, ?, ?, ?);""", (parameters[0], parameters[1], parameters[2], parameters[3], parameters[4], parameters[5]))
             elif(action_choice == 6):
-                print(admin_user.remove_student())
+                id = admin_user.remove_student()
+                cursor.execute("""DELETE FROM STUDENT WHERE ID = ?;""", (id,))
             elif(action_choice == 7):
-                print(admin_user.add_instuctor())
+                parameters = admin_user.add_instuctor()
+                cursor.execute("""INSERT INTO INSTRUCTOR VALUES(?, ?, ?, ?, ?, ?, ?);""", (parameters[0], parameters[1], parameters[2], parameters[3], parameters[4], parameters[5], parameters[6]))
             elif(action_choice == 8):
-                print(admin_user.remove_instructor())
+                id = admin_user.remove_instructor()
+                cursor.execute("""DELETE FROM INSTRUCTOR WHERE ID = ?;""", (id,))
+            elif(action_choice == 9):
+                cursor.execute(admin_user.search_courses())
+                query_result = cursor.fetchall()
+                print(query_result)
+            elif(action_choice == 10):
+                parameters = admin_user.search_by_parameters()
+                print(cursor.execute("""SELECT * FROM COURSE WHERE (CRN = ? AND TITLE = ? AND DEPARTMENT = ? AND TIME = ? AND DAYS = ? AND SEMESTER = ? AND YEAR = ? AND CREDITS = ?)""" , (parameters[0], parameters[1], parameters[2], parameters[3], parameters[4], parameters[5], parameters[6], parameters[7])))
+                query_result = cursor.fetchall()
+                print(query_result)
             elif(action_choice == 0):
                 break
 else:
