@@ -54,6 +54,8 @@ sql_command = """INSERT INTO COURSE VALUES('000000', 'Applied Programming Concep
 #cursor.execute(sql_command)
 sql_command = """INSERT INTO ADMIN VALUES('000000', 'George', 'Washington', 'President', 'Dobbs 140', 'washingtong');"""
 #cursor.execute(sql_command)
+sql_command = """INSERT INTO INSTRUCTOR VALUES('1', 'John', 'Hancock', 'Prof', '2000', 'BSCO', 'hancockj');"""
+#cursor.execute(sql_command)
 
 user_choice = int(input(f'Choose a user type\n1. Student\n2. Instructor\n3. Admin\n'))
 
@@ -70,15 +72,15 @@ if(user_choice == 1):
     cursor.execute("""SELECT LAST FROM STUDENT WHERE LAST = ?""", (last,))
     query_result3 = cursor.fetchall()
     if(len(query_result1) == 0):
-        result_id = "0"
+        result_id = "er404"
     else:
         result_id = id
     if(len(query_result2) == 0):
-        result_first = "0"
+        result_first = "er404"
     else:
         result_first = first
     if(len(query_result3) == 0):
-        result_last = "0"
+        result_last = "er404"
     else:
         result_last = last
     
@@ -91,15 +93,15 @@ elif(user_choice == 2):
     cursor.execute("""SELECT LAST FROM INSTRUCTOR WHERE LAST = ?""", (last,))
     query_result3 = cursor.fetchall()
     if(len(query_result1) == 0):
-        result_id = "0"
+        result_id = "er404"
     else:
         result_id = id
     if(len(query_result2) == 0):
-        result_first = "0"
+        result_first = "er404"
     else:
         result_first = first
     if(len(query_result3) == 0):
-        result_last = "0"
+        result_last = "er404"
     else:
         result_last = last
     
@@ -112,20 +114,23 @@ elif(user_choice == 3):
     cursor.execute("""SELECT LAST FROM ADMIN WHERE LAST = ?""", (last,))
     query_result3 = cursor.fetchall()
     if(len(query_result1) == 0):
-        result_id = "0"
+        result_id = "er404"
     else:
         result_id = id
     if(len(query_result2) == 0):
-        result_first = "0"
+        result_first = "er404"
     else:
         result_first = first
     if(len(query_result3) == 0):
-        result_last = "0"
+        result_last = "er404"
     else:
         result_last = last
     
 else:
     print("That was not a valid input. Please try again.\n")
+    result_first = "er404"
+    result_last = "er404"
+    result_id = "er404"
 
 # Successful Log In
 if(id == result_id) and (first == result_first) and (last == result_last):
