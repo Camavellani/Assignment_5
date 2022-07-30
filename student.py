@@ -1,6 +1,6 @@
 import sqlite3
 from user import user
-database = sqlite3.connect("data.db")
+database = sqlite3.connect("new data.db")
 cursor = database.cursor()
 class student(user):
     # Constructor
