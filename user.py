@@ -3,24 +3,24 @@ database = sqlite3.connect("data.db")
 cursor = database.cursor()
 class user:
     # Constructor
-    def __init__(self, set_first, set_last, set_id):
+    def __init__(self, set_first, set_last, set_password):
         self.first_name = set_first
         self.last_name = set_last
-        self.id = set_id
+        self.password = set_password
 
     # Method
     def set_first(self, name):
         self.first_name = name
     def set_last(self, name):
         self.last_name = name
-    def set_id(self, num):
-        self.id = num
+    def set_password(self, num):
+        self.password = num
     def show_first(self):
         return self.first_name
     def show_last(self):
         return self.last_name
-    def show_id(self):
-        return self.id
+    def show_password(self):
+        return self.password
     def search_courses(self):
         sql_command = """SELECT * FROM COURSE"""
         return(sql_command)
