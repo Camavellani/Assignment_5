@@ -1,7 +1,7 @@
 import sqlite3
 from user import user
 # database file connection 
-database = sqlite3.connect("data.db") 
+database = sqlite3.connect("new data.db") 
 # cursor objects are used to traverse, search, grab, etc. information from the database, similar to indices or pointers  
 cursor = database.cursor() 
 class instructor(user):
